@@ -1,0 +1,77 @@
+# chef dk
+# https://docs.chef.io/knife.html  (to use knife command)
+
+1. wget https://packages.chef.io/files/stable/chefdk/1.2.22/el/6/chefdk-1.2.22-1.el6.x86_64.rpm
+
+2.rpm -ivh https://packages.chef.io/files/stable/chefdk/1.2.22/el/6/chefdk-1.2.22-1.el6.x86_64.rpm
+
+3. knife
+
+4. Create the chef-repo:
+
+5. mkdir .chef
+
+6. cd .chef/
+
+7. mkdir j2d
+
+8. copy these files (byresh_instance.pem  byresh.pem  knife.rb)
+
+9. knife ssl check
+
+10. check (ssh -i byresh_instance.pem ec2-user@54.254.143.2)
+
+11. exit (if it succecss exit from that instance)
+
+12. knife bootstrap 54.254.143.2 -x ec2-user -i byresh_instance.pem -N chefclient --sudo
+ 
+       (check client is installed)
+
+13. knife cookbook create httpd
+
+14. cd .. (cook books created in .chef directory) (go to .chef)
+
+15. cd cookbooks/
+
+16. cd httpd/
+
+17. cd recipes/
+
+18.vim default.rb  
+     
+         package 'httpd' do
+                action :install
+       end
+
+         service 'httpd' do  
+               action :start
+       end
+
+#refer(https://www.digitalocean.com/community/tutorials/how-to-create-simple-chef-cookbooks-to-manage-infrastructure-on-ubuntu)
+
+19. go to j2d and
+
+20. knife cookbook upload httpd
+
+21.  knife node run_list set chefclient1 recipe[httpd]
+
+        commands of knife_node (https://docs.chef.io/knife_node.html)
+22. go to chefclient instance and 
+
+23. chef-client
+
+
+There are two ways to create a chef-repo when using the Chef boilerplate repository as a base:
+
+Clone the chef-repo from GitHub
+Download the chef-repo as a tar.gz file and place it into local version source control.
+
+Note:
+
+Chef strongly recommends using some type of version control tool to manage the source code in the chef-repo. Chef uses git for everything, including for cookbooks. git and/or GitHub is not required to use Chef. If another version source control system is preferred over git (such as Subversion, Mercurial, or Bazaar) that is just fine.
+
+To create a chef-repo, run the following command:
+
+$ chef generate repo REPO_NAME
+
+This command uses the chef command-line tool that is packaged as part of the Chef development kit to create a chef-repo
